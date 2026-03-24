@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcByDev — Free Financial Calculators</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f0f0f;
+    --surface: #181818;
+    --border: #272727;
+    --text: #f0f0f0;
+    --muted: #5a5a5a;
+    --accent: #3b82f6;
+    --accent-dim: rgba(59,130,246,0.08);
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* NAV */
+  nav {
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: rgba(15,15,15,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+  }
+  .logo { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .nav-tag { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+
+  /* HERO */
+  .hero {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 72px 40px 56px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* SECTION */
+  .section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px 56px;
+  }
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title span {
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  /* CARDS GRID */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.15s, background 0.15s;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .card-icon { font-size: 20px; }
+  .card-name { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
+  .card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .card-arrow {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--accent);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .card:hover .card-arrow { opacity: 1; }
+
+  /* ABOUT */
+  .about {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+  .about-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .about-text h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .about-text h2 span { color: var(--accent); }
+  .about-text p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .about-stats { display: flex; flex-direction: column; gap: 16px; }
+  .stat { display: flex; align-items: center; gap: 14px; }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: -1px; min-width: 60px; }
+  .stat-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    nav, .section, .about { padding-left: 20px; padding-right: 20px; }
+    .hero { padding: 48px 20px 40px; }
+    .about-box { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Calc<span>ByDev</span></div>
+  <div class="nav-tag">Free · No Signup · Always Accurate</div>
+</nav>
+
+<div class="hero">
+  <h1>Smart tools for<br><span>smarter money</span> decisions</h1>
+  <p>Free financial calculators built for everyday Indians. No ads, no signup, no nonsense — just numbers that matter.</p>
+</div>
+
+<!-- Investment Calculators -->
+<div class="section">
+  <div class="section-title"><span>📈</span>Investment Calculators</div>
+  <div class="cards">
+    <a class="card" href="sip.html">
+      <div class="card-icon">💹</div>
+      <div class="card-name">SIP Calculator</div>
+      <div class="card-desc">Calculate wealth from monthly systematic investments</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="lumpsum.html">
+      <div class="card-icon">💰</div>
+      <div class="card-name">Lumpsum Calculator</div>
+      <div class="card-desc">One-time investment growth over time</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="stepup.html">
+      <div class="card-icon">🚀</div>
+      <div class="card-name">Step-Up SIP</div>
+      <div class="card-desc">SIP with annual increment for faster wealth building</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="cagr.html">
+      <div class="card-icon">📊</div>
+      <div class="card-name">CAGR Calculator</div>
+      <div class="card-desc">Compounded annual growth rate on any investment</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="compound.html">
+      <div class="card-icon">♾️</div>
+      <div class="card-name">Compound Interest</div>
+      <div class="card-desc">Power of compounding on your savings</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+  </div>
+</div>
+
+<!-- Savings & Deposits -->
+<div class="section">
+  <div class="section-title"><span>🏦</span>Savings & Deposits</div>
+  <div class="cards">
+    <a class="card" href="fd.html">
+      <div class="card-icon">🏛️</div>
+      <div class="card-name">FD Calculator</div>
+      <div class="card-desc">Fixed deposit maturity with quarterly compounding</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="rd.html">
+      <div class="card-icon">📅</div>
+      <div class="card-name">RD Calculator</div>
+      <div class="card-desc">Recurring deposit returns month by month</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="ppf.html">
+      <div class="card-icon">🔒</div>
+      <div class="card-name">PPF Calculator</div>
+      <div class="card-desc">Public Provident Fund 15-year maturity amount</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+  </div>
+</div>
+
+<!-- Loan & Tax -->
+<div class="section">
+  <div class="section-title"><span>🧾</span>Loan & Tax</div>
+  <div class="cards">
+    <a class="card" href="emi.html">
+      <div class="card-icon">🏠</div>
+      <div class="card-name">EMI Calculator</div>
+      <div class="card-desc">Monthly loan installment for home, car or personal loan</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+    <a class="card" href="gst.html">
+      <div class="card-icon">🧾</div>
+      <div class="card-name">GST Calculator</div>
+      <div class="card-desc">Add or remove GST with CGST/SGST breakup</div>
+      <div class="card-arrow">Open →</div>
+    </a>
+  </div>
+</div>
+
+<!-- About -->
+<div class="about">
+  <div class="about-box">
+    <div class="about-text">
+      <h2>Built with <span>purpose</span></h2>
+      <p>CalcByDev started with a simple idea — financial calculators in India are either cluttered with ads or hidden behind paywalls. Everyone deserves clear, honest tools to plan their money better. Whether you're a student planning your first SIP or someone calculating a home loan EMI — this is for you.</p>
+      <p style="margin-top:10px">Made by Dev, a finance student from Jaipur 🌅</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Free calculators<br>no signup needed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Ads, paywalls<br>or hidden fees</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Times you can use it<br>completely free</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>© 2025 <span>CalcByDev</span> · devsr.me</div>
+  <div>Made with ❤️ in Jaipur</div>
+</footer>
+
+</body>
+</html>
