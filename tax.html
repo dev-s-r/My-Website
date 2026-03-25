@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Income Tax Calculator FY 2025-26 — CalcByDev</title>
 <meta name="description" content="Calculate your income tax for FY 2025-26. Compare Old vs New Tax Regime to find out which saves you more. Free, no signup.">
@@ -12,19 +15,20 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0f0f0f;
-    --surface: #181818;
-    --border: #272727;
-    --text: #f0f0f0;
-    --muted: #5a5a5a;
+    --bg: #0B1221;
+    --surface: #1E293B;
+    --border: #334155;
+    --text: #F1F5F9;
+    --muted: #94A3B8;
     --accent: #3b82f6;
     --accent-dim: rgba(59,130,246,0.08);
     --error: #ef4444;
     --green: #22c55e;
     --green-dim: rgba(34,197,94,0.08);
-    --nav-bg: rgba(15,15,15,0.95);
+    --nav-bg: rgba(11,18,33,0.95);
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  .page-title, .result-value, .stat-num { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; }
 
   nav {
     padding: 18px 40px;
@@ -185,14 +189,14 @@
 
   /* Light theme */
   [data-theme="light"] {
-    --bg: #f5f5f5;
-    --surface: #ffffff;
-    --border: #e0e0e0;
-    --text: #0f0f0f;
-    --muted: #737373;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --muted: #64748B;
     --accent: #3b82f6;
     --accent-dim: rgba(59,130,246,0.10);
-    --nav-bg: rgba(245,245,245,0.95);
+    --nav-bg: rgba(248,250,252,0.95);
   }
   html { scroll-behavior: smooth; }
   /* Theme toggle */
@@ -235,6 +239,7 @@
     line-height: 1;
   }
   .back-top.visible { opacity: 1; transform: translateY(0); }
+  .number { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -329,15 +334,15 @@
       <div class="results">
         <div class="result-card highlight">
           <div class="result-label">Tax Payable</div>
-          <div class="result-value" id="r-tax">—</div>
+          <div class="result-value number" id="r-tax">—</div>
         </div>
         <div class="result-card">
           <div class="result-label">Effective Rate</div>
-          <div class="result-value" id="r-eff">—</div>
+          <div class="result-value number" id="r-eff">—</div>
         </div>
         <div class="result-card highlight-green">
           <div class="result-label">Take-Home</div>
-          <div class="result-value" id="r-home">—</div>
+          <div class="result-value number" id="r-home">—</div>
         </div>
       </div>
 

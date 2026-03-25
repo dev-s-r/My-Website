@@ -9,23 +9,39 @@
 <meta property="og:description" content="15 free calculators for everyday Indians. SIP, EMI, Income Tax, Goal Planner, Loan Prepayment and more. No ads, no signup.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://devsr.me">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0f0f0f;
-    --surface: #181818;
-    --border: #272727;
-    --text: #f0f0f0;
-    --muted: #5a5a5a;
-    --accent: #3b82f6;
-    --accent-dim: rgba(59,130,246,0.08);
-    --nav-bg: rgba(15,15,15,0.95);
+    --bg:         #0B1221;
+    --surface:    #1E293B;
+    --border:     #334155;
+    --text:       #F1F5F9;
+    --muted:      #94A3B8;
+    --accent:     #3B82F6;
+    --accent-dim: rgba(59,130,246,0.10);
+    --success:    #10B981;
+    --danger:     #EF4444;
+    --nav-bg:     rgba(11,18,33,0.95);
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+  h1, h2, h3, .card-name, .section-title, .hero h1, .page-title, .stat-num {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .number { font-variant-numeric: tabular-nums; }
 
   /* NAV */
   nav {
-    padding: 18px 40px;
+    padding: 0 40px;
+    height: 56px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
@@ -35,10 +51,27 @@
     background: var(--nav-bg);
     backdrop-filter: blur(8px);
     z-index: 100;
+    gap: 24px;
   }
-  .logo { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; font-family: 'Manrope', sans-serif; color: var(--text); text-decoration: none; flex-shrink: 0; }
   .logo span { color: var(--accent); }
-  .nav-tag { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-link { font-size: 13px; color: var(--muted); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+  .nav-link:hover { color: var(--text); background: var(--surface); }
+  .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .theme-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 15px;
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
 
   /* HERO */
   .hero {
@@ -94,6 +127,25 @@
   }
   .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
+  /* SECTION */
+  .section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 40px 48px;
+  }
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+  }
+  .section-title span { color: var(--accent); margin-right: 8px; }
+
   /* FEATURED */
   .featured-grid {
     display: grid;
@@ -145,26 +197,6 @@
   .cat-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .cat-tab:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
 
-  /* SECTION */
-  .section {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 40px 56px;
-  }
-  .section-title {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--muted);
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-title span {
-    color: var(--accent);
-    margin-right: 8px;
-  }
-
   /* CARDS GRID */
   .cards {
     display: grid;
@@ -190,9 +222,9 @@
     transform: translateY(-1px);
   }
   .card-icon { font-size: 20px; }
-  .card-name { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
+  .card-name { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
   .card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-  .card-hint { font-size: 11px; color: var(--accent); opacity: 0.8; margin-top: 2px; }
+  .card-hint { font-size: 11px; color: var(--accent); opacity: 0.9; margin-top: 2px; }
   .card-arrow {
     margin-top: 4px;
     font-size: 12px;
@@ -202,28 +234,30 @@
   }
   .card:hover .card-arrow { opacity: 1; }
 
-  /* ABOUT */
-  .about {
+  /* TRUST SECTION */
+  .trust {
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 40px 80px;
   }
-  .about-box {
+  .trust-box {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 32px 36px;
+    border-radius: 12px;
+    padding: 40px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 48px;
     align-items: center;
   }
-  .about-text h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
-  .about-text h2 span { color: var(--accent); }
-  .about-text p { font-size: 13px; color: var(--muted); line-height: 1.7; }
-  .about-stats { display: flex; flex-direction: column; gap: 16px; }
-  .stat { display: flex; align-items: center; gap: 14px; }
-  .stat-num { font-size: 28px; font-weight: 700; color: var(--accent); letter-spacing: -1px; min-width: 60px; }
+  .trust-text h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .trust-text h2 span { color: var(--accent); }
+  .trust-text p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .trust-stats { display: flex; flex-direction: column; gap: 20px; }
+  .stat { display: flex; align-items: center; gap: 16px; }
+  .stat-icon { font-size: 28px; width: 48px; height: 48px; background: var(--accent-dim); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stat-body { display: flex; flex-direction: column; gap: 2px; }
+  .stat-num { font-size: 26px; font-weight: 700; color: var(--accent); letter-spacing: -1px; font-family: 'Manrope', sans-serif; }
   .stat-label { font-size: 12px; color: var(--muted); line-height: 1.4; }
 
   /* FOOTER */
@@ -237,59 +271,43 @@
     color: var(--muted);
   }
   footer span { color: var(--accent); }
+  footer a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
+  footer a:hover { color: var(--accent); }
+  .footer-links { display: flex; gap: 16px; }
 
   @media (max-width: 640px) {
-    nav, .section, .about { padding-left: 20px; padding-right: 20px; }
+    nav, .section, .trust { padding-left: 20px; padding-right: 20px; }
     .hero { padding: 48px 20px 40px; }
-    .about-box { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+    .trust-box { grid-template-columns: 1fr; gap: 28px; padding: 24px; }
     footer { flex-direction: column; gap: 8px; text-align: center; }
+    .footer-links { justify-content: center; }
   }
 
   /* Light theme */
   [data-theme="light"] {
-    --bg: #f5f5f5;
-    --surface: #ffffff;
-    --border: #e0e0e0;
-    --text: #0f0f0f;
-    --muted: #737373;
-    --accent: #3b82f6;
-    --accent-dim: rgba(59,130,246,0.10);
-    --nav-bg: rgba(245,245,245,0.95);
+    --bg:         #F8FAFC;
+    --surface:    #FFFFFF;
+    --border:     #E2E8F0;
+    --text:       #0F172A;
+    --muted:      #64748B;
+    --accent:     #3B82F6;
+    --accent-dim: rgba(59,130,246,0.08);
+    --nav-bg:     rgba(248,250,252,0.95);
   }
   html { scroll-behavior: smooth; }
-  /* Theme toggle */
-  .theme-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 15px;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.15s, color 0.15s;
-    flex-shrink: 0;
-  }
-  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
   /* Back to top */
   .back-top {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 36px;
-    height: 36px;
+    bottom: 24px; right: 24px;
+    width: 36px; height: 36px;
     background: var(--accent);
     color: #fff;
     border: none;
     border-radius: 8px;
     font-size: 18px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.2s, transform 0.2s;
@@ -302,17 +320,23 @@
 <body>
 
 <nav>
-  <div class="logo">Calc<span>ByDev</span></div>
-  <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode" aria-pressed="false">☀️</button>
-  <div class="nav-tag">Free · No Signup · Always Accurate</div>
+  <a class="logo" href="index.html">Calc<span>ByDev</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="#calculators">Calculators</a>
+    <a class="nav-link" href="compare.html">Compare</a>
+    <a class="nav-link" href="#about">About</a>
+  </div>
+  <div class="nav-right">
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode" aria-label="Toggle light/dark mode" aria-pressed="false">☀️</button>
+  </div>
 </nav>
 
 <div class="hero">
   <h1>Understand your money.<br><span>Not just calculate it.</span></h1>
-  <p>Simple financial tools for real decisions.</p>
+  <p>A financial decision tool built for real Indians — clean, fast, no ads.</p>
   <div class="hero-btns">
     <a class="btn-primary" href="#calculators">Start Calculating</a>
-    <a class="btn-secondary" href="#categories">Explore Tools</a>
+    <a class="btn-secondary" href="compare.html">Compare Tools</a>
   </div>
 </div>
 
@@ -323,37 +347,37 @@
     <a class="featured-card" href="sip.html">
       <div class="card-icon">💹</div>
       <div class="card-name">SIP Calculator</div>
-      <div class="card-desc">Calculate wealth from monthly systematic investments</div>
-      <div class="card-hint">Best for long-term investment</div>
+      <div class="card-desc">Build wealth through monthly investing</div>
+      <div class="card-hint">Best for 5+ year wealth creation</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="featured-card" href="emi.html">
       <div class="card-icon">🏠</div>
       <div class="card-name">EMI Calculator</div>
-      <div class="card-desc">Monthly loan installment for home, car or personal loan</div>
-      <div class="card-hint">Know your loan repayment</div>
+      <div class="card-desc">Monthly loan cost for home, car or personal loans</div>
+      <div class="card-hint">Know your repayment before you borrow</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="featured-card" href="tax.html">
       <div class="card-icon">🇮🇳</div>
-      <div class="card-name">Income Tax Calculator</div>
+      <div class="card-name">Income Tax</div>
       <div class="card-desc">Old vs New Regime comparison for FY 2025-26</div>
-      <div class="card-hint">Pick the better tax regime</div>
+      <div class="card-hint">Pick the regime that saves you more</div>
       <div class="card-arrow">Open →</div>
     </a>
-    <a class="featured-card" href="gst.html">
-      <div class="card-icon">🧾</div>
-      <div class="card-name">GST Calculator</div>
-      <div class="card-desc">Add or remove GST with CGST/SGST/IGST breakup</div>
-      <div class="card-hint">18% applies to most services</div>
+    <a class="featured-card" href="compare.html">
+      <div class="card-icon">⚖️</div>
+      <div class="card-name">Compare Tools</div>
+      <div class="card-desc">SIP vs FD, Prepay vs Invest, EMI vs Prepayment</div>
+      <div class="card-hint">See which option wins for your case</div>
       <div class="card-arrow">Open →</div>
     </a>
   </div>
 </div>
 
-<!-- Category Navigation -->
-<div class="section" id="categories">
-  <div class="section-title"><span>🗂️</span>Browse by Category</div>
+<!-- Category Tabs + Single Grid -->
+<div class="section" id="calculators">
+  <div class="section-title"><span>🗂️</span>All Calculators</div>
   <div class="cat-tabs">
     <button class="cat-tab active" onclick="filterCat('all', this)">All</button>
     <button class="cat-tab" onclick="filterCat('investing', this)">📈 Investing</button>
@@ -362,18 +386,13 @@
     <button class="cat-tab" onclick="filterCat('tax', this)">🧾 Tax</button>
     <button class="cat-tab" onclick="filterCat('planning', this)">🎯 Planning</button>
   </div>
-</div>
-
-<div id="calculators">
-<!-- Investment Calculators -->
-<div class="section" data-cat="investing">
-  <div class="section-title"><span>📈</span>Investment Calculators</div>
-  <div class="cards">
+  <div class="cards" id="calc-grid">
+    <!-- Investing -->
     <a class="card" href="sip.html" data-cat="investing">
       <div class="card-icon">💹</div>
       <div class="card-name">SIP Calculator</div>
-      <div class="card-desc">Calculate wealth from monthly systematic investments</div>
-      <div class="card-hint">Best for long-term investment</div>
+      <div class="card-desc">Build wealth through monthly investing</div>
+      <div class="card-hint">Best for 5+ year wealth creation</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="lumpsum.html" data-cat="investing">
@@ -386,43 +405,37 @@
     <a class="card" href="stepup.html" data-cat="investing">
       <div class="card-icon">🚀</div>
       <div class="card-name">Step-Up SIP</div>
-      <div class="card-desc">SIP with annual increment for faster wealth building</div>
-      <div class="card-hint">Boosts corpus with salary hikes</div>
+      <div class="card-desc">SIP with annual increment for faster wealth</div>
+      <div class="card-hint">Boost corpus as your income grows</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="cagr.html" data-cat="investing">
       <div class="card-icon">📊</div>
       <div class="card-name">CAGR Calculator</div>
-      <div class="card-desc">Compounded annual growth rate on any investment</div>
-      <div class="card-hint">Measure true investment growth</div>
+      <div class="card-desc">Compounded annual growth on any investment</div>
+      <div class="card-hint">Measure true investment performance</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="compound.html" data-cat="investing">
       <div class="card-icon">♾️</div>
       <div class="card-name">Compound Interest</div>
-      <div class="card-desc">Power of compounding on your savings</div>
-      <div class="card-hint">Time is your best asset</div>
+      <div class="card-desc">See how compounding multiplies your money</div>
+      <div class="card-hint">Time is your biggest asset</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="compare.html" data-cat="investing">
       <div class="card-icon">⚖️</div>
       <div class="card-name">Investment Comparison</div>
-      <div class="card-desc">Compare SIP vs FD, SIP vs Lumpsum, and more side by side</div>
-      <div class="card-hint">See which investment wins</div>
+      <div class="card-desc">SIP vs FD, Prepay vs Invest, and more</div>
+      <div class="card-hint">See which option wins for you</div>
       <div class="card-arrow">Open →</div>
     </a>
-  </div>
-</div>
-
-<!-- Savings & Deposits -->
-<div class="section" data-cat="savings">
-  <div class="section-title"><span>🏦</span>Savings & Deposits</div>
-  <div class="cards">
+    <!-- Savings -->
     <a class="card" href="fd.html" data-cat="savings">
       <div class="card-icon">🏛️</div>
       <div class="card-name">FD Calculator</div>
-      <div class="card-desc">Fixed deposit maturity with quarterly compounding</div>
-      <div class="card-hint">Low risk, low return</div>
+      <div class="card-desc">Fixed return investment, quarterly compounding</div>
+      <div class="card-hint">Safe but usually loses to inflation</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="rd.html" data-cat="savings">
@@ -435,31 +448,26 @@
     <a class="card" href="ppf.html" data-cat="savings">
       <div class="card-icon">🔒</div>
       <div class="card-name">PPF Calculator</div>
-      <div class="card-desc">Public Provident Fund 15-year maturity amount</div>
+      <div class="card-desc">15-year Public Provident Fund maturity amount</div>
       <div class="card-hint">Tax-free, government-backed</div>
       <div class="card-arrow">Open →</div>
     </a>
-  </div>
-</div>
-
-<!-- Loan & Tax -->
-<div class="section" data-cat="loans tax">
-  <div class="section-title"><span>🧾</span>Loan & Tax</div>
-  <div class="cards">
+    <!-- Loans -->
     <a class="card" href="emi.html" data-cat="loans">
       <div class="card-icon">🏠</div>
       <div class="card-name">EMI Calculator</div>
-      <div class="card-desc">Monthly loan installment for home, car or personal loan</div>
-      <div class="card-hint">Know your loan repayment</div>
+      <div class="card-desc">Monthly cost for home, car or personal loans</div>
+      <div class="card-hint">Know your repayment before you borrow</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="prepayment.html" data-cat="loans">
       <div class="card-icon">💸</div>
       <div class="card-name">Loan Prepayment</div>
-      <div class="card-desc">Extra monthly payment → interest saved &amp; years cut</div>
+      <div class="card-desc">Extra payment → interest saved &amp; years cut</div>
       <div class="card-hint">Pay less interest overall</div>
       <div class="card-arrow">Open →</div>
     </a>
+    <!-- Tax -->
     <a class="card" href="gst.html" data-cat="tax">
       <div class="card-icon">🧾</div>
       <div class="card-name">GST Calculator</div>
@@ -470,54 +478,57 @@
     <a class="card" href="tax.html" data-cat="tax">
       <div class="card-icon">🇮🇳</div>
       <div class="card-name">Income Tax Calculator</div>
-      <div class="card-desc">Old vs New Regime comparison for FY 2025-26</div>
-      <div class="card-hint">Pick the better tax regime</div>
+      <div class="card-desc">Old vs New Regime comparison FY 2025-26</div>
+      <div class="card-hint">Pick the regime that saves you more</div>
       <div class="card-arrow">Open →</div>
     </a>
-  </div>
-</div>
-
-<!-- Planning -->
-<div class="section" data-cat="planning">
-  <div class="section-title"><span>🎯</span>Planning</div>
-  <div class="cards">
+    <!-- Planning -->
     <a class="card" href="retirement.html" data-cat="planning">
       <div class="card-icon">🏖️</div>
       <div class="card-name">Retirement Calculator</div>
-      <div class="card-desc">Corpus needed and monthly SIP to retire comfortably</div>
-      <div class="card-hint">Start early, retire free</div>
+      <div class="card-desc">Corpus needed and monthly SIP to retire free</div>
+      <div class="card-hint">Start early, retire comfortably</div>
       <div class="card-arrow">Open →</div>
     </a>
     <a class="card" href="goal.html" data-cat="planning">
       <div class="card-icon">🎯</div>
       <div class="card-name">Goal Planner</div>
-      <div class="card-desc">Set a target amount &amp; time → get your monthly SIP and lumpsum needed</div>
-      <div class="card-hint">Plan every financial goal</div>
+      <div class="card-desc">Set a target → get your monthly SIP and lumpsum</div>
+      <div class="card-hint">Plan any financial goal clearly</div>
       <div class="card-arrow">Open →</div>
     </a>
   </div>
 </div>
 
-<!-- About -->
-<div class="about">
-  <div class="about-box">
-    <div class="about-text">
+<!-- Trust Section -->
+<div class="trust" id="about">
+  <div class="trust-box">
+    <div class="trust-text">
       <h2>Built with <span>purpose</span></h2>
       <p>CalcByDev started with a simple idea — financial calculators in India are either cluttered with ads or hidden behind paywalls. Everyone deserves clear, honest tools to plan their money better. Whether you're a student planning your first SIP or someone calculating a home loan EMI — this is for you.</p>
-      <p style="margin-top:10px">Made by Dev, a finance student from Jaipur 🌅</p>
+      <p style="margin-top:12px">Made by Dev, a finance student from Jaipur 🌅</p>
     </div>
-    <div class="about-stats">
+    <div class="trust-stats">
       <div class="stat">
-        <div class="stat-num">15</div>
-        <div class="stat-label">Free calculators<br>no signup needed</div>
+        <div class="stat-icon">🧮</div>
+        <div class="stat-body">
+          <div class="stat-num number">15</div>
+          <div class="stat-label">Free calculators<br>no signup needed</div>
+        </div>
       </div>
       <div class="stat">
-        <div class="stat-num">0</div>
-        <div class="stat-label">Ads, paywalls<br>or hidden fees</div>
+        <div class="stat-icon">🚫</div>
+        <div class="stat-body">
+          <div class="stat-num number">0</div>
+          <div class="stat-label">Ads, paywalls<br>or hidden fees</div>
+        </div>
       </div>
       <div class="stat">
-        <div class="stat-num">∞</div>
-        <div class="stat-label">Times you can use it<br>completely free</div>
+        <div class="stat-icon">⚡</div>
+        <div class="stat-body">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Times you can use it<br>completely free</div>
+        </div>
       </div>
     </div>
   </div>
@@ -525,9 +536,13 @@
 
 <footer>
   <div>© 2026 <span>CalcByDev</span> · devsr.me</div>
+  <div class="footer-links">
+    <a href="#calculators">Calculators</a>
+    <a href="compare.html">Compare</a>
+    <a href="#about">About</a>
+  </div>
   <div>Made with ❤️ in Jaipur</div>
 </footer>
-
 
 <script>
   /* ── Theme toggle ── */
@@ -545,22 +560,15 @@
     localStorage.setItem('theme', next);
     var btn = document.getElementById('theme-btn');
     if (btn) { btn.textContent = next === 'light' ? '🌙' : '☀️'; btn.setAttribute('aria-pressed', next === 'light' ? 'true' : 'false'); }
-    if (typeof updateChartTheme === 'function') { updateChartTheme(); }
-    try { if (typeof calc === 'function') { calc(); } } catch(e) {}
   }
 
-  /* ── Category filter ── */
+  /* ── Category filter (no scroll, instant) ── */
   function filterCat(cat, btn) {
     document.querySelectorAll('.cat-tab').forEach(function(t) { t.classList.remove('active'); });
     btn.classList.add('active');
-    var sections = document.querySelectorAll('#calculators .section');
-    sections.forEach(function(sec) {
-      if (cat === 'all') {
-        sec.style.display = '';
-      } else {
-        var secCat = sec.getAttribute('data-cat') || '';
-        sec.style.display = secCat.indexOf(cat) !== -1 ? '' : 'none';
-      }
+    document.querySelectorAll('#calc-grid .card').forEach(function(card) {
+      var cardCat = card.getAttribute('data-cat') || '';
+      card.style.display = (cat === 'all' || cardCat === cat) ? '' : 'none';
     });
   }
 
