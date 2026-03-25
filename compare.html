@@ -109,9 +109,9 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" onclick="setMode('sip-fd')">SIP vs FD</button>
-    <button class="tab" onclick="setMode('sip-lump')">SIP vs Lumpsum</button>
-    <button class="tab" onclick="setMode('fd-rd')">FD vs RD</button>
+    <button class="tab active" onclick="setMode('sip-fd', this)">SIP vs FD</button>
+    <button class="tab" onclick="setMode('sip-lump', this)">SIP vs Lumpsum</button>
+    <button class="tab" onclick="setMode('fd-rd', this)">FD vs RD</button>
   </div>
 
   <div class="grid">
@@ -286,10 +286,10 @@
     calc();
   }
 
-  function setMode(m) {
+  function setMode(m, btn) {
     currentMode = m;
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    btn.classList.add('active');
     renderInputs();
     calc();
   }
