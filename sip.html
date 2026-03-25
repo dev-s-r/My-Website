@@ -19,13 +19,13 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0B1221;
-    --surface: #1E293B;
-    --border: #334155;
+    --bg: #080C14;
+    --surface: rgba(15,23,42,0.75);
+    --border: rgba(99,116,148,0.22);
     --text: #F1F5F9;
     --muted: #94A3B8;
-    --accent: #3b82f6;
-    --accent-dim: rgba(59,130,246,0.08);
+    --accent: #6366F1;
+    --accent-dim: rgba(99,102,241,0.12);
     --nav-bg: rgba(11,18,33,0.95);
     --error: #ef4444;
     --success: #10B981;
@@ -161,13 +161,13 @@
 
   /* Light theme */
   [data-theme="light"] {
-    --bg: #F8FAFC;
+    --bg: #F0F4FF;
     --surface: #FFFFFF;
-    --border: #E2E8F0;
+    --border: rgba(99,102,241,0.12);
     --text: #0F172A;
     --muted: #64748B;
-    --accent: #3b82f6;
-    --accent-dim: rgba(59,130,246,0.10);
+    --accent: #6366F1;
+    --accent-dim: rgba(99,102,241,0.12);
     --nav-bg: rgba(248,250,252,0.95);
   }
   html { scroll-behavior: smooth; }
@@ -460,7 +460,7 @@
       data: {
         labels,
         datasets: [
-          { label: 'Total Value',      data: val, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.06)', fill: true },
+          { label: 'Total Value',      data: val, borderColor: '#6366F1', backgroundColor: 'rgba(99,102,241,0.06)', fill: true },
           { label: 'Amount Invested',  data: inv, borderColor: '#5a5a5a', backgroundColor: 'transparent', borderDash: [5,4] }
         ]
       },
