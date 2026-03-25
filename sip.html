@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SIP Calculator — CalcByDev</title>
 <meta name="description" content="Free SIP calculator. Find out how much wealth you can build with monthly mutual fund investments. Real-time charts, no ads.">
@@ -12,16 +15,19 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0f0f0f;
-    --surface: #181818;
-    --border: #272727;
-    --text: #f0f0f0;
-    --muted: #5a5a5a;
+    --bg: #0B1221;
+    --surface: #1E293B;
+    --border: #334155;
+    --text: #F1F5F9;
+    --muted: #94A3B8;
     --accent: #3b82f6;
     --accent-dim: rgba(59,130,246,0.08);
+    --nav-bg: rgba(11,18,33,0.95);
     --error: #ef4444;
+    --success: #10B981;
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  .page-title, .result-value, .stat-num { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; }
 
   nav {
     padding: 18px 40px;
@@ -91,6 +97,18 @@
   input[type=number]::-webkit-outer-spin-button,
   input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
+  /* Preset buttons */
+  .presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .preset-btn { padding: 4px 10px; font-size: 11px; background: var(--bg); border: 1px solid var(--border); color: var(--muted); border-radius: 20px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .preset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Insights box */
+  .insights-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .insights-title { font-size: 11px; font-weight: 600; margin-bottom: 10px; color: var(--success); text-transform: uppercase; letter-spacing: 0.5px; }
+  .insight-row { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 12px; color: var(--muted); line-height: 1.4; border-bottom: 1px solid var(--border); }
+  .insight-row:last-child { border-bottom: none; }
+  .insight-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
   .num-input {
     width: 88px;
     background: var(--bg);
@@ -134,14 +152,14 @@
 
   /* Light theme */
   [data-theme="light"] {
-    --bg: #f5f5f5;
-    --surface: #ffffff;
-    --border: #e0e0e0;
-    --text: #0f0f0f;
-    --muted: #737373;
+    --bg: #F8FAFC;
+    --surface: #FFFFFF;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --muted: #64748B;
     --accent: #3b82f6;
     --accent-dim: rgba(59,130,246,0.10);
-    --nav-bg: rgba(245,245,245,0.95);
+    --nav-bg: rgba(248,250,252,0.95);
   }
   html { scroll-behavior: smooth; }
   /* Theme toggle */
@@ -184,6 +202,7 @@
     line-height: 1;
   }
   .back-top.visible { opacity: 1; transform: translateY(0); }
+  .number { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -213,6 +232,12 @@
         <div class="input-row">
           <input type="range" id="amt-r" min="500" max="1000000" step="1" value="5000" oninput="onSlider('amt')">
           <input type="number" class="num-input" id="amt-n" value="5000" oninput="onNumber('amt')">
+        </div>
+        <div class="presets">
+          <button class="preset-btn" onclick="setPreset(1000)">₹1K</button>
+          <button class="preset-btn" onclick="setPreset(5000)">₹5K</button>
+          <button class="preset-btn" onclick="setPreset(10000)">₹10K</button>
+          <button class="preset-btn" onclick="setPreset(50000)">₹50K</button>
         </div>
         <div class="err-msg" id="amt-err"></div>
       </div>
@@ -254,20 +279,26 @@
       <div class="results">
         <div class="result-card highlight">
           <div class="result-label">Total Value</div>
-          <div class="result-value" id="r-total">—</div>
+          <div class="result-value number" id="r-total">—</div>
         </div>
         <div class="result-card">
           <div class="result-label">Invested</div>
-          <div class="result-value" id="r-invested">—</div>
+          <div class="result-value number" id="r-invested">—</div>
         </div>
         <div class="result-card">
           <div class="result-label">Returns</div>
-          <div class="result-value" id="r-returns">—</div>
+          <div class="result-value number" id="r-returns">—</div>
         </div>
       </div>
       <div class="chart-box">
         <div class="chart-label">Growth over time — Total Value vs Amount Invested</div>
         <canvas id="chart" height="210"></canvas>
+      </div>
+      <div class="insights-box" id="insights-box" style="display:none">
+        <div class="insights-title">💡 Insights</div>
+        <div class="insight-row"><span class="insight-icon">📥</span><span id="insight-invested"></span></div>
+        <div class="insight-row"><span class="insight-icon">📈</span><span id="insight-returns"></span></div>
+        <div class="insight-row"><span class="insight-icon">🔢</span><span id="insight-multiplier"></span></div>
       </div>
     </div>
   </div>
@@ -360,6 +391,14 @@
     return '₹' + n.toFixed(2);
   }
 
+  function setPreset(val) {
+    document.getElementById('amt-n').value = val;
+    document.getElementById('amt-r').value = val;
+    document.getElementById('amt-n').classList.remove('error');
+    document.getElementById('amt-err').textContent = '';
+    calc();
+  }
+
   function calc() {
     const P    = getVal('amt');
     const rate = getVal('rate');
@@ -380,10 +419,25 @@
 
     const total     = val[val.length - 1];
     const invested  = inv[inv.length - 1];
+    const returns   = total - invested;
+    const multiplier = (total / invested).toFixed(2);
 
     document.getElementById('r-total').textContent    = fmt(total);
     document.getElementById('r-invested').textContent = fmt(invested);
-    document.getElementById('r-returns').textContent  = fmt(total - invested);
+    document.getElementById('r-returns').textContent  = fmt(returns);
+
+    // Insights
+    var insightsBox = document.getElementById('insights-box');
+    if (insightsBox) {
+      insightsBox.style.display = '';
+      document.getElementById('insight-invested').textContent =
+        'You invested ' + fmt(invested) + ' over ' + yrs + (yrs === 1 ? ' year' : ' years');
+      document.getElementById('insight-returns').textContent =
+        'You earned ' + fmt(returns) + ' in returns' +
+        (returns > invested ? ' — more than what you put in!' : (yrs < 5 ? ' — try a 5+ year horizon for bigger gains' : ''));
+      document.getElementById('insight-multiplier').textContent =
+        'Your money grew ' + multiplier + 'x';
+    }
 
     if (chartInst) chartInst.destroy();
     chartInst = new Chart(document.getElementById('chart').getContext('2d'), {

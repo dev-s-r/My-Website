@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Manrope:wght@600;700&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Investment Comparison — CalcByDev</title>
 <meta name="description" content="Free Investment Comparison calculator. Compare SIP vs FD, SIP vs Lumpsum, FD vs RD side-by-side with charts. See which investment wins. No ads.">
@@ -11,8 +14,10 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --bg: #0f0f0f; --surface: #181818; --border: #272727; --text: #f0f0f0; --muted: #5a5a5a; --accent: #3b82f6; --accent-dim: rgba(59,130,246,0.08); --error: #ef4444; --green: #22c55e; --amber: #f59e0b; }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  :root { --bg: #0B1221; --surface: #1E293B; --border: #334155; --text: #F1F5F9; --muted: #94A3B8; --accent: #3b82f6; --accent-dim: rgba(59,130,246,0.08);
+    --nav-bg: rgba(11,18,33,0.95); --error: #ef4444; --green: #22c55e; --amber: #f59e0b; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+  .page-title, .result-value, .stat-num { font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif; }
   nav { padding: 18px 40px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--nav-bg); backdrop-filter: blur(8px); z-index: 100; }
   .logo { font-size: 17px; font-weight: 700; letter-spacing: -0.5px; text-decoration: none; color: var(--text); }
   .logo span { color: var(--accent); }
@@ -87,12 +92,13 @@
   footer { border-top: 1px solid var(--border); padding: 20px 40px; display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 60px; }
   footer span { color: var(--accent); }
   @media (max-width: 640px) { footer { flex-direction: column; gap: 6px; padding: 20px; } .results-row { grid-template-columns: 1fr; } }
-  [data-theme="light"] { --bg: #f5f5f5; --surface: #ffffff; --border: #e0e0e0; --text: #0f0f0f; --muted: #737373; --accent: #3b82f6; --accent-dim: rgba(59,130,246,0.10); --nav-bg: rgba(245,245,245,0.95); }
+  [data-theme="light"] { --bg: #F8FAFC; --surface: #FFFFFF; --border: #E2E8F0; --text: #0F172A; --muted: #64748B; --accent: #3b82f6; --accent-dim: rgba(59,130,246,0.10); --nav-bg: rgba(248,250,252,0.95); }
   html { scroll-behavior: smooth; }
   .theme-btn { background: none; border: 1px solid var(--border); color: var(--muted); cursor: pointer; font-size: 15px; width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, color 0.15s; flex-shrink: 0; }
   .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
   .back-top { position: fixed; bottom: 24px; right: 24px; width: 36px; height: 36px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; z-index: 999; line-height: 1; }
   .back-top.visible { opacity: 1; transform: translateY(0); }
+  .number { font-variant-numeric: tabular-nums; }
 </style>
 </head>
 <body>
@@ -109,6 +115,7 @@
   </div>
 
   <div class="tabs">
+    <button class="tab" onclick="setMode('prepay-invest', this)">🔥 Prepay vs Invest</button>
     <button class="tab active" onclick="setMode('sip-fd', this)">SIP vs FD</button>
     <button class="tab" onclick="setMode('sip-lump', this)">SIP vs Lumpsum</button>
     <button class="tab" onclick="setMode('sip-inflation', this)">SIP vs Inflation</button>
@@ -127,12 +134,12 @@
         <div class="winner-row">
           <div class="winner-side">
             <div class="winner-label" id="w-label-a">Option A</div>
-            <div class="winner-val a" id="w-val-a">—</div>
+            <div class="winner-val number a" id="w-val-a">—</div>
           </div>
           <div class="winner-badge" id="w-badge">—</div>
           <div class="winner-side" style="text-align:right">
             <div class="winner-label" id="w-label-b">Option B</div>
-            <div class="winner-val b" id="w-val-b">—</div>
+            <div class="winner-val number b" id="w-val-b">—</div>
           </div>
         </div>
       </div>
@@ -194,6 +201,79 @@
   }
 
   const modeConfig = {
+    'prepay-invest': {
+      nameA: 'Loan Prepayment', nameB: 'SIP Investment',
+      fields: () =>
+        dividerHTML('💸 Loan Details', 'a') +
+        fieldHTML('principal', 'Outstanding Loan (₹)', '1L – 2 Cr', 100000, 20000000, 50000, 3000000, false) +
+        fieldHTML('loan-rate', 'Loan Interest Rate (%)', '5 – 20', 5, 20, 0.1, 8.5, false) +
+        fieldHTML('yr', 'Remaining Tenure (Years)', '1 – 30', 1, 30, 1, 20, false) +
+        dividerHTML('📈 Prepay vs Invest', 'b') +
+        fieldHTML('extra', 'Extra Monthly Amount (₹)', '500 – 1L', 500, 100000, 500, 5000, true) +
+        fieldHTML('invest-rate', 'SIP Return p.a. (%)', '1 – 30', 1, 30, 0.1, 12, true) +
+        infoHTML('How this works', 'You have extra money each month. Option A: prepay your loan (save guaranteed interest). Option B: invest in SIP (earn market returns). The winner depends on your loan rate vs investment return.'),
+      calc: () => {
+        const principal = gv('principal'), loanRate = gv('loan-rate'), yrs = gv('yr'), extra = gv('extra'), investRate = gv('invest-rate');
+        if (!principal || !loanRate || !yrs || !extra || !investRate) return;
+        const monthlyRate = loanRate / 100 / 12;
+        const n = yrs * 12;
+        // Standard EMI
+        const emi = principal * monthlyRate * Math.pow(1 + monthlyRate, n) / (Math.pow(1 + monthlyRate, n) - 1);
+        // Total paid without prepayment
+        const totalStd = emi * n;
+        const interestStd = totalStd - principal;
+
+        // With prepayment: simulate month by month
+        let bal = principal, monthsPrepay = 0, totalPaidPrepay = 0;
+        while (bal > 0 && monthsPrepay < n * 2) {
+          const interest = bal * monthlyRate;
+          const principalPart = emi - interest;
+          const extraPrincipal = Math.min(extra, bal - principalPart);
+          bal -= (principalPart + extraPrincipal);
+          totalPaidPrepay += emi + extra;
+          monthsPrepay++;
+          if (bal <= 0) break;
+        }
+        const actualInterestPrepay = totalPaidPrepay - principal - (extra * monthsPrepay);
+        const interestSavedActual = interestStd - actualInterestPrepay;
+        const yearsSaved = (n - monthsPrepay) / 12;
+
+        // SIP investment of extra amount for the original tenure
+        const i = investRate / 100 / 12;
+        const sipFV = extra * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+        const sipInv = extra * n;
+        const sipReturns = sipFV - sipInv;
+
+        // Build chart data
+        const labels = [], prepayData = [], sipData = [];
+        let balChart = principal;
+        for (let y = 1; y <= yrs; y++) {
+          const mn = y * 12;
+          // SIP value at year y
+          const sipVal = extra * ((Math.pow(1 + i, mn) - 1) / i) * (1 + i);
+          sipData.push(parseFloat(sipVal.toFixed(2)));
+          // Cumulative interest saved by prepayment at year y (approximate)
+          const interestSavedY = interestStd * (mn / n) * 0.5;
+          prepayData.push(parseFloat((extra * mn + interestSavedY).toFixed(2)));
+          labels.push('Yr ' + y);
+        }
+
+        // Winner: compare interest saved vs SIP returns
+        const prepayBenefit = interestSavedActual;
+        const sipBenefit = sipReturns;
+
+        return {
+          aFV: prepayBenefit + extra * monthsPrepay,
+          bFV: sipFV,
+          aInv: extra * monthsPrepay,
+          bInv: sipInv,
+          labels,
+          aData: prepayData,
+          bData: sipData,
+          chartLabel: 'Cumulative benefit — Prepayment (interest saved) vs SIP (corpus)'
+        };
+      }
+    },
     'sip-fd': {
       nameA: 'SIP (Market)', nameB: 'Fixed Deposit',
       fields: () =>
