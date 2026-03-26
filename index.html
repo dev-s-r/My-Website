@@ -346,6 +346,43 @@
     display: none;
   }
   .search-clear:hover { color: var(--text); }
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: rgba(15,23,42,0.97);
+    border: 1px solid rgba(99,102,241,0.30);
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 320px;
+    overflow-y: auto;
+    z-index: 200;
+    display: none;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  }
+  .search-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .search-dropdown-item:last-child { border-bottom: none; }
+  .search-dropdown-item:hover { background: rgba(99,102,241,0.12); }
+  .search-dropdown-item .sd-icon { font-size: 20px; line-height: 1; flex-shrink: 0; }
+  .search-dropdown-item .sd-name { font-weight: 500; }
+  .search-dropdown-empty {
+    padding: 14px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .search-dropdown-empty strong { color: var(--text); }
   .no-results {
     grid-column: 1 / -1;
     text-align: center;
@@ -606,6 +643,7 @@
     <span class="search-icon">🔍</span>
     <input type="search" id="search-input" class="search-input" placeholder="Search calculators… e.g. SIP, EMI, tax, retirement" autocomplete="off" oninput="debouncedSearch(this.value)" aria-label="Search calculators">
     <button class="search-clear" id="search-clear" onclick="clearSearch()" title="Clear search" aria-label="Clear search">✕</button>
+    <div class="search-dropdown" id="search-dropdown" role="listbox" aria-label="Search results" aria-live="polite"></div>
   </div>
   <div class="hero-btns">
     <a class="btn-primary" href="#calculators">Start Calculating</a>
@@ -876,16 +914,16 @@
 
   /* ── Search ── */
 
-  /* Cache each card's search text so DOM queries are not repeated on every
-     keystroke.  Built lazily on the first call to onSearch(). */
   var _cardData = null;
-  var _hasScrolledToResults = false;
   function _buildCardData() {
     if (_cardData) return _cardData;
     _cardData = [];
     document.querySelectorAll('#calc-grid .card').forEach(function(card) {
       _cardData.push({
         el: card,
+        icon: (card.querySelector('.card-icon') || {textContent: ''}).textContent,
+        name: (card.querySelector('.card-name') || {textContent: ''}).textContent,
+        href: card.getAttribute('href') || '#',
         text: [
           (card.querySelector('.card-name')  || {textContent: ''}).textContent,
           (card.querySelector('.card-desc')  || {textContent: ''}).textContent,
@@ -901,36 +939,33 @@
     var clearBtn = document.getElementById('search-clear');
     if (clearBtn) clearBtn.style.display = query ? '' : 'none';
 
-    var data = _buildCardData();
-    var visible = 0;
+    var dropdown = document.getElementById('search-dropdown');
 
-    data.forEach(function(item) {
-      var match = !query || fuzzyMatch(query, item.text);
-      item.el.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-
-    var noRes = document.getElementById('no-results');
-    if (noRes) {
-      if (visible === 0 && query) {
-        noRes.innerHTML = 'No calculators found for <strong>"' + query.replace(/</g,'&lt;') + '"</strong> — try a different keyword.';
-        noRes.style.display = '';
-      } else {
-        noRes.style.display = 'none';
-      }
+    if (!query) {
+      if (dropdown) dropdown.style.display = 'none';
+      return;
     }
 
-    if (query) {
-      document.querySelectorAll('.cat-tab').forEach(function(t) { t.classList.remove('active'); });
-      var allTab = document.getElementById('cat-all');
-      if (allTab) allTab.classList.add('active');
-      var calcSection = document.getElementById('calculators');
-      if (calcSection && !_hasScrolledToResults) {
-        _hasScrolledToResults = true;
-        calcSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var data = _buildCardData();
+    var matches = [];
+    data.forEach(function(item) {
+      if (fuzzyMatch(query, item.text)) matches.push(item);
+    });
+
+    if (dropdown) {
+      if (matches.length > 0) {
+        dropdown.innerHTML = matches.map(function(item) {
+          var safeHref = item.href.replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          var safeIcon = item.icon.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          return '<a class="search-dropdown-item" role="option" href="' + safeHref + '">' +
+                 '<span class="sd-icon">' + safeIcon + '</span>' +
+                 '<span class="sd-name">' + item.name.replace(/</g, '&lt;') + '</span>' +
+                 '</a>';
+        }).join('');
+      } else {
+        dropdown.innerHTML = '<div class="search-dropdown-empty">No calculators found for <strong>&ldquo;' + query.replace(/</g,'&lt;') + '&rdquo;</strong></div>';
       }
-    } else {
-      _hasScrolledToResults = false;
+      dropdown.style.display = '';
     }
   }
 
@@ -949,6 +984,8 @@
   function clearSearch() {
     var input = document.getElementById('search-input');
     if (input) { input.value = ''; input.focus(); }
+    var dropdown = document.getElementById('search-dropdown');
+    if (dropdown) dropdown.style.display = 'none';
     onSearch('');
   }
 
@@ -968,6 +1005,15 @@
   window.addEventListener('scroll', function () {
     var btn = document.getElementById('back-top');
     if (btn) btn.classList.toggle('visible', window.scrollY > 300);
+  });
+
+  /* ── Close search dropdown when clicking outside ── */
+  var _searchWrap = document.querySelector('.search-wrap');
+  var _searchDropdown = document.getElementById('search-dropdown');
+  document.addEventListener('click', function(e) {
+    if (_searchDropdown && _searchWrap && !_searchWrap.contains(e.target)) {
+      _searchDropdown.style.display = 'none';
+    }
   });
 </script>
 
