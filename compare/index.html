@@ -434,7 +434,7 @@
         const income = gv('income'), ded = gv('deductions'), hra = gv('hra');
         if (!income) return;
         // Old regime
-        const stdDedOld = 75000;
+        const stdDedOld = 50000;
         const taxableOld = Math.max(0, income - stdDedOld - ded - hra);
         const oldTax = calcOldTax(taxableOld);
         // New regime FY 2025-26
@@ -491,10 +491,8 @@
   function calcOldTax(taxable) {
     // Rebate 87A: zero tax for taxable income <= 500000
     if (taxable <= 500000) return 0;
-    let tax = 0;
-    if (taxable <= 250000) tax = 0;
-    else if (taxable <= 500000) tax = (taxable - 250000) * 0.05;
-    else if (taxable <= 1000000) tax = 12500 + (taxable - 500000) * 0.20;
+    let tax;
+    if (taxable <= 1000000) tax = 12500 + (taxable - 500000) * 0.20;
     else tax = 112500 + (taxable - 1000000) * 0.30;
     return tax * 1.04; // 4% cess
   }
