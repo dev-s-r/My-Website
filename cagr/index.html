@@ -216,7 +216,7 @@
     const labels=[],val=[];
     for(let y=0;y<=yrs;y++){labels.push(y===0?'Start':'Yr '+y);val.push(parseFloat((init*Math.pow(1+r,y)).toFixed(2)));}
     if(chartInst)chartInst.destroy();
-    chartInst=new Chart(document.getElementById('chart').getContext('2d'),{type:'line',data:{labels,datasets:[{label:'Investment Value',data:val,borderColor:'#6366F1',backgroundColor:'rgba(99,102,241,0.06)',fill:true}]},options:{responsive:true,animation:{duration:200},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' Value: '+fmt(ctx.parsed.y)}}},scales:{x:{grid:{color:'#1e1e1e'},ticks:{maxTicksLimit:8}},y:{grid:{color:'#1e1e1e'},ticks:{callback:v=>fmtAxis(v),maxTicksLimit:6}}},elements:{point:{radius:0,hoverRadius:3},line:{tension:0.4,borderWidth:2}}}});
+    chartInst=new Chart(document.getElementById('chart').getContext('2d'),{type:'line',data:{labels,datasets:[{label:'Investment Value',data:val,borderColor:'#6366F1',backgroundColor:'rgba(99,102,241,0.06)',fill:true}]},options:{responsive:true,animation:{duration:200},interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' Value: '+fmt(ctx.parsed.y)}}},scales:{x:{grid:{color:cColor()},ticks:{maxTicksLimit:8}},y:{grid:{color:cColor()},ticks:{callback:v=>fmtAxis(v),maxTicksLimit:6}}},elements:{point:{radius:0,hoverRadius:3},line:{tension:0.4,borderWidth:2}}}});
   }
   calc();
 </script>
