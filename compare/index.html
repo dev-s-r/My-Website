@@ -334,7 +334,7 @@
       calc: () => {
         const amt = gv('amt'), yrs = gv('yr'), rate = gv('rate');
         if (!amt || !yrs || !rate) return;
-        const i = Math.pow(1 + rate / 100, 1 / 12) - 1, n = yrs*12;
+        const i = Math.pow(1 + rate / 100, 1 / 12) - 1, n = yrs * 12;
         const sipFV = amt * ((Math.pow(1+i, n) - 1) / i) * (1+i);
         const lumpInv = amt * n;
         const lumpFV = lumpInv * Math.pow(1 + rate/100, yrs);
@@ -375,7 +375,7 @@
       calc: () => {
         const amt = gv('amt'), sipRate = gv('sip-rate'), yrs = gv('yr'), infRate = gv('inf-rate');
         if (!amt || !sipRate || !yrs || !infRate) return;
-        const i = Math.pow(1 + sipRate / 100, 1 / 12) - 1, n = yrs*12;
+        const i = Math.pow(1 + sipRate / 100, 1 / 12) - 1, n = yrs * 12;
         const sipFV = amt * ((Math.pow(1+i, n) - 1) / i) * (1+i);
         const realFV = sipFV / Math.pow(1 + infRate/100, yrs);
         const invested = amt * n;
