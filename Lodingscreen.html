@@ -46,7 +46,29 @@
     padding: 16px; gap: 14px;
   }
 
-  header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 13px; border-bottom: 2px solid #0d0d0d; }
+  header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 13px; border-bottom: 2px solid #0d0d0d;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .h-name {
+    font-family: 'Archivo Black', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .h-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #444;
+    line-height: 1.5;
+    text-align: right;
+  }
+  @media (max-width: 640px) {
+    header { align-items: flex-start; }
+    .h-meta { text-align: left; }
+  }
 
   /* ─────────────────────────────────────────
      UNIQUE WIP INDICATOR: THE BLUEPRINT SWEEP
