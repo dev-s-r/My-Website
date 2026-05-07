@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIP Calculator — Dev Singh Rathore</title>
+<meta name="description" content="Calculate the compound growth of systematic monthly investments over time.">
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { 
+          sans: ['Inter', 'sans-serif'], 
+          display: ['Manrope', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        },
+        colors: { 
+          ink: '#0B1221',    
+          paper: '#F4F6F8',  
+          muted: '#64748B',  
+          cobalt: '#2563EB', 
+          error: '#E11D48'   
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Mechanical inputs */
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 2px;
+    background: #0B1221;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; 
+    height: 14px;
+    background: #2563EB;
+    border-radius: 0;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px; background: #2563EB; border-radius: 0; border: none; cursor: pointer;
+  }
+  
+  /* Hide spinners */
+  input[type=number] { -moz-appearance: textfield; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* Number input base */
+  .num-input { transition: color 0.2s, border-color 0.2s; }
+  .num-input:focus { color: #2563EB; border-color: #2563EB; outline: none; }
+  .num-input.error { color: #E11D48; border-color: #E11D48; }
+
+  .preset-btn { transition: all 0.2s ease; }
+  .preset-btn:hover { background-color: #0B1221; color: #F4F6F8; }
+</style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased selection:bg-cobalt selection:text-white min-h-screen flex flex-col p-2 md:p-6">
+
+  <main class="flex-grow max-w-[1200px] mx-auto w-full">
+    
+    <!-- Top Nav -->
+    <header class="flex justify-between items-end border-b-2 border-ink pb-4 mb-8 px-2">
+      <div class="flex gap-4 md:gap-8 items-baseline">
+        <a href="#" class="font-display font-extrabold text-xl tracking-tight uppercase hover:text-cobalt transition-colors">Dev Singh Rathore</a>
+        <span class="font-mono text-xs font-bold text-muted uppercase hidden md:inline">/ Tool 01</span>
+      </div>
+      <div class="flex gap-6 text-xs font-mono font-bold uppercase text-ink">
+        <a href="#" class="hover:text-cobalt transition-colors">Compare ↗</a>
+        <a href="#" class="hover:text-cobalt transition-colors">Index ↗</a>
+      </div>
+    </header>
+
+    <!-- Structural Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-[2px] bg-ink border-2 border-ink">
+      
+      <!-- Title Block -->
+      <div class="bg-paper p-6 md:p-10 lg:col-span-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <h1 class="font-display font-extrabold text-4xl md:text-6xl tracking-tighter uppercase mb-2">SIP Calculator</h1>
+          <p class="font-medium text-muted max-w-xl">Calculate the compound growth of systematic monthly investments.</p>
+        </div>
+        <div class="font-mono text-xs font-bold text-cobalt tracking-widest uppercase">
+          Engine: Active
+        </div>
+      </div>
+
+      <!-- Controls Block (Left) -->
+      <div class="bg-paper p-6 md:p-10 lg:col-span-4 flex flex-col gap-10">
+        
+        <!-- Monthly Investment -->
+        <div>
+          <div class="flex justify-between items-end mb-4">
+            <label class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Monthly Inv.</label>
+            <div class="relative">
+              <span class="absolute left-0 bottom-1 font-display font-bold text-lg text-muted">₹</span>
+              <input type="number" id="amt-n" value="5000" class="num-input bg-transparent border-b-2 border-ink font-display text-2xl font-bold w-32 text-right pb-1 pl-4" oninput="onNumber('amt')">
+            </div>
+          </div>
+          <input type="range" id="amt-r" min="500" max="1000000" step="1" value="5000" oninput="onSlider('amt')" class="mb-4">
+          <div class="flex gap-2 flex-wrap">
+            <button class="preset-btn border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase" onclick="setPreset(1000)">1K</button>
+            <button class="preset-btn border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase" onclick="setPreset(5000)">5K</button>
+            <button class="preset-btn border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase" onclick="setPreset(10000)">10K</button>
+            <button class="preset-btn border-2 border-ink px-3 py-1 font-mono text-[10px] font-bold uppercase" onclick="setPreset(50000)">50K</button>
+          </div>
+          <div class="font-mono text-[10px] text-error mt-2 min-h-[14px]" id="amt-err"></div>
+        </div>
+
+        <!-- Expected Return -->
+        <div>
+          <div class="flex justify-between items-end mb-4">
+            <label class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Expected Return</label>
+            <div class="relative flex items-baseline">
+              <input type="number" id="rate-n" value="12" class="num-input bg-transparent border-b-2 border-ink font-display text-2xl font-bold w-20 text-right pb-1 pr-1" oninput="onNumber('rate')">
+              <span class="font-display font-bold text-lg text-muted ml-1">%</span>
+            </div>
+          </div>
+          <input type="range" id="rate-r" min="1" max="30" step="0.1" value="12" oninput="onSlider('rate')">
+          <div class="font-mono text-[10px] text-error mt-2 min-h-[14px]" id="rate-err"></div>
+        </div>
+
+        <!-- Time Period -->
+        <div>
+          <div class="flex justify-between items-end mb-4">
+            <label class="font-mono text-xs font-bold uppercase tracking-widest text-muted">Duration</label>
+            <div class="relative flex items-baseline">
+              <input type="number" id="yr-n" value="10" class="num-input bg-transparent border-b-2 border-ink font-display text-2xl font-bold w-16 text-right pb-1 pr-1" oninput="onNumber('yr')">
+              <span class="font-display font-bold text-lg text-muted ml-1">Yrs</span>
+            </div>
+          </div>
+          <input type="range" id="yr-r" min="1" max="40" step="1" value="10" oninput="onSlider('yr')">
+          <div class="font-mono text-[10px] text-error mt-2 min-h-[14px]" id="yr-err"></div>
+        </div>
+
+      </div>
+
+      <!-- Output Block (Right) -->
+      <div class="bg-paper p-0 lg:col-span-8 flex flex-col">
+        
+        <!-- Results Sub-grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-[2px] bg-ink border-b-2 border-ink">
+          
+          <div class="bg-cobalt text-white p-6 md:p-8 group hover:bg-ink transition-colors cursor-default">
+            <div class="font-mono text-[10px] tracking-widest uppercase mb-4 opacity-80 group-hover:opacity-100">Total Value</div>
+            <div class="font-display font-extrabold text-3xl md:text-4xl tracking-tighter truncate" id="r-total">—</div>
+          </div>
+          
+          <div class="bg-paper p-6 md:p-8 hover:bg-ink hover:text-white transition-colors cursor-default">
+            <div class="font-mono text-[10px] tracking-widest uppercase mb-4 text-muted group-hover:text-white/60">Invested</div>
+            <div class="font-display font-extrabold text-2xl md:text-3xl tracking-tighter truncate" id="r-invested">—</div>
+          </div>
+          
+          <div class="bg-paper p-6 md:p-8 hover:bg-ink hover:text-white transition-colors cursor-default">
+            <div class="font-mono text-[10px] tracking-widest uppercase mb-4 text-muted group-hover:text-white/60">Wealth Gained</div>
+            <div class="font-display font-extrabold text-2xl md:text-3xl tracking-tighter truncate text-cobalt group-hover:text-white" id="r-returns">—</div>
+          </div>
+
+        </div>
+
+        <!-- Chart -->
+        <div class="flex-grow w-full relative p-6 md:p-8 min-h-[300px]">
+          <canvas id="chart"></canvas>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="mt-8 px-2 flex justify-between text-[10px] md:text-xs font-mono font-bold uppercase tracking-widest text-muted">
+      <span>Est. 2026</span>
+      <span>No Ads. No Trackers.</span>
+    </footer>
+
+  </main>
+
+<script>
+  Chart.defaults.font.family = "'JetBrains Mono', monospace";
+  Chart.defaults.color = '#64748B'; 
+  Chart.defaults.borderColor = 'rgba(11, 18, 33, 0.1)'; 
+
+  let chartInst;
+
+  const limits = {
+    amt:  { min: 500,  max: 1000000 },
+    rate: { min: 1,    max: 30 },
+    yr:   { min: 1,    max: 40 }
+  };
+
+  function onSlider(key) {
+    const val = +document.getElementById(key + '-r').value;
+    document.getElementById(key + '-n').value = val;
+    document.getElementById(key + '-n').classList.remove('error');
+    document.getElementById(key + '-err').textContent = '';
+    calc();
+  }
+
+  function onNumber(key) {
+    const input = document.getElementById(key + '-n');
+    const val = +input.value;
+    const { min, max } = limits[key];
+    const errEl = document.getElementById(key + '-err');
+
+    if (input.value === '' || isNaN(val)) {
+      errEl.textContent = '';
+      return;
+    }
+
+    if (val < min) {
+      input.classList.add('error');
+      errEl.textContent = `Min ${min.toLocaleString('en-IN')}`;
+      return;
+    }
+    if (val > max) {
+      input.classList.add('error');
+      errEl.textContent = `Max ${max.toLocaleString('en-IN')}`;
+      return;
+    }
+
+    input.classList.remove('error');
+    errEl.textContent = '';
+    document.getElementById(key + '-r').value = val;
+    calc();
+  }
+
+  function getVal(key) {
+    return +document.getElementById(key + '-n').value || 0;
+  }
+
+  function fmt(n) {
+    if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + ' Cr';
+    if (n >= 100000)   return '₹' + (n / 100000).toFixed(2) + ' L';
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
+
+  function fmtAxis(n) {
+    if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + 'Cr';
+    if (n >= 100000)   return '₹' + (n / 100000).toFixed(2) + 'L';
+    if (n >= 1000)     return '₹' + (n / 1000).toFixed(2) + 'k';
+    return '₹' + n.toFixed(2);
+  }
+
+  function setPreset(val) {
+    document.getElementById('amt-n').value = val;
+    document.getElementById('amt-r').value = val;
+    document.getElementById('amt-n').classList.remove('error');
+    document.getElementById('amt-err').textContent = '';
+    calc();
+  }
+
+  function calc() {
+    const P    = getVal('amt');
+    const rate = getVal('rate');
+    const yrs  = getVal('yr');
+    if (!P || !rate || !yrs) return;
+
+    // CAGR-equivalent monthly rate
+    const i = Math.pow(1 + rate / 100, 1 / 12) - 1;
+    const labels = [], inv = [], val = [];
+
+    for (let y = 1; y <= yrs; y++) {
+      const n = y * 12;
+      const fv = P * ((Math.pow(1 + i, n) - 1) / i) * (1 + i);
+      labels.push('Yr ' + y);
+      inv.push(parseFloat((P * n).toFixed(2)));
+      val.push(parseFloat(fv.toFixed(2)));
+    }
+
+    const total     = val[val.length - 1];
+    const invested  = inv[inv.length - 1];
+    const returns   = total - invested;
+
+    document.getElementById('r-total').textContent    = fmt(total);
+    document.getElementById('r-invested').textContent = fmt(invested);
+    document.getElementById('r-returns').textContent  = fmt(returns);
+
+    if (chartInst) chartInst.destroy();
+    chartInst = new Chart(document.getElementById('chart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { 
+            label: 'Total Value',      
+            data: val, 
+            borderColor: '#2563EB',
+            backgroundColor: 'transparent',
+            borderWidth: 3
+          },
+          { 
+            label: 'Amount Invested',  
+            data: inv, 
+            borderColor: '#0B1221', 
+            backgroundColor: 'transparent', 
+            borderWidth: 2,
+            borderDash: [4, 4] 
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: { 
+            backgroundColor: '#0B1221',
+            titleFont: { family: "'JetBrains Mono', monospace", size: 11 },
+            bodyFont: { family: "'JetBrains Mono', monospace", size: 12 },
+            padding: 12,
+            cornerRadius: 0,
+            callbacks: { label: ctx => ' ' + ctx.dataset.label + ': ' + fmt(ctx.parsed.y) } 
+          }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8 } },
+          y: { ticks: { callback: v => fmtAxis(v), maxTicksLimit: 6 } }
+        },
+        elements: {
+          point: { radius: 0, hoverRadius: 6, hoverBackgroundColor: '#2563EB', hoverBorderWidth: 0 },
+          line: { tension: 0 } 
+        }
+      }
+    });
+  }
+
+  // Initialize on load
+  document.addEventListener("DOMContentLoaded", calc);
+</script>
+</body>
+</html>

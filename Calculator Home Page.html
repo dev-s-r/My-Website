@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalcByDev — System Index</title>
+<meta name="description" content="15 free financial calculators for Indians. SIP, EMI, Income Tax, Goal Planner, Loan Prepayment and more. Zero ads.">
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { 
+          sans: ['Inter', 'sans-serif'], 
+          display: ['Manrope', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        },
+        colors: { 
+          ink: '#000000',    /* Pure absolute black */
+          paper: '#F4F6F8',  
+          muted: '#64748B',  
+          cobalt: '#2563EB', /* Signature Blue */
+          error: '#E11D48'   
+        }
+      }
+    }
+  }
+</script>
+<style>
+  ::selection { background: #2563EB; color: #F4F6F8; }
+  
+  /* Input base */
+  .search-input { transition: color 0.2s; }
+  .search-input:focus { outline: none; }
+  .search-input::placeholder { color: #64748B; opacity: 0.8; }
+
+  /* Clear button */
+  .search-clear { display: none; }
+  .search-input:not(:placeholder-shown) + .search-clear { display: block; }
+
+  /* Horizontal Category tabs */
+  .cat-btn { 
+    transition: all 0.2s ease; 
+    position: relative; 
+    padding-left: 20px; 
+    white-space: nowrap;
+  }
+  .cat-btn::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    color: #2563EB;
+    transform: translateX(-8px);
+    transition: opacity 0.2s, transform 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+  .cat-btn.active { 
+    color: #2563EB; 
+  }
+  .cat-btn.active::before { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+  .cat-btn:hover:not(.active) {
+    color: #000000;
+  }
+  .cat-btn:hover:not(.active)::before {
+    opacity: 0.4;
+    transform: translateX(-4px);
+  }
+</style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased min-h-screen flex flex-col p-2 md:p-6">
+
+  <main class="flex-grow max-w-[1600px] mx-auto w-full flex flex-col">
+    
+    <!-- Top Nav -->
+    <header class="flex justify-between items-end border-b-2 border-ink pb-4 mb-10 px-2">
+      <div class="flex gap-4 md:gap-8 items-baseline">
+        <a href="#" class="font-display font-extrabold text-xl tracking-tight uppercase hover:text-cobalt transition-colors">Dev Singh Rathore</a>
+        <span class="font-mono text-xs font-bold text-muted uppercase hidden md:inline">/ System_Index</span>
+      </div>
+      <div class="flex gap-6 text-xs font-mono font-bold uppercase text-ink">
+        <a href="compare/" class="hover:text-cobalt transition-colors">Compare ↗</a>
+        <a href="about/" class="hover:text-cobalt transition-colors">About ↗</a>
+      </div>
+    </header>
+
+    <!-- Structural Header (Light & Creative) -->
+    <div class="px-2 pb-10 border-b-2 border-ink mb-6 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
+      <div>
+        <div class="font-mono text-[10px] font-bold text-cobalt tracking-widest uppercase mb-4">Core Engine / v3.3.0</div>
+        <h1 class="font-display font-extrabold text-6xl md:text-8xl lg:text-[100px] leading-[0.85] tracking-tighter uppercase mb-6">CalcByDev</h1>
+        <p class="font-medium text-muted max-w-xl md:text-lg">15 financial algorithms. Zero ads. No telemetry. Built for real-world application.</p>
+      </div>
+      
+      <!-- System Specs moved to top right -->
+      <div class="hidden md:flex lg:flex-col gap-6 lg:gap-2 font-mono text-xs uppercase text-right w-full lg:w-auto shrink-0 border-t-2 border-ink lg:border-t-0 pt-6 lg:pt-0">
+        <div class="flex justify-between lg:justify-end gap-12 border-b border-ink/10 pb-2 lg:pb-1">
+          <span class="text-muted">Active Modules</span><span class="font-bold text-cobalt">15</span>
+        </div>
+        <div class="flex justify-between lg:justify-end gap-12 border-b border-ink/10 pb-2 lg:pb-1">
+          <span class="text-muted">Base Logic</span><span class="font-bold">TCM-4</span>
+        </div>
+        <div class="flex justify-between lg:justify-end gap-12 border-b border-ink/10 pb-2 lg:pb-1">
+          <span class="text-muted">Telemetry</span><span class="font-bold">Disabled</span>
+        </div>
+        <div class="flex justify-between lg:justify-end gap-12 pt-1">
+          <span class="text-muted">Host Loc</span><span>Jaipur, IN</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls: Horizontal Filters + Inline Search -->
+    <div class="px-2 flex flex-col xl:flex-row justify-between items-start xl:items-end gap-8 mb-8">
+      
+      <!-- Horizontal Filters -->
+      <nav class="flex flex-wrap gap-x-6 gap-y-4 font-display font-extrabold text-xl md:text-2xl uppercase tracking-tight text-muted" id="cat-filters">
+        <button class="cat-btn active" data-cat="all">All Tools</button>
+        <button class="cat-btn" data-cat="investing">Investing</button>
+        <button class="cat-btn" data-cat="savings">Savings</button>
+        <button class="cat-btn" data-cat="loans">Loans</button>
+        <button class="cat-btn" data-cat="tax">Tax</button>
+        <button class="cat-btn" data-cat="planning">Planning</button>
+      </nav>
+
+      <!-- Query Engine -->
+      <div class="w-full xl:w-[420px] shrink-0 border-b-2 border-ink focus-within:border-cobalt transition-colors relative group">
+        <div class="absolute left-0 bottom-3 font-mono text-cobalt font-bold text-sm md:text-base group-focus-within:text-ink transition-colors">root@calc:~#</div>
+        <input type="text" id="search-input" class="search-input w-full bg-transparent text-ink font-mono font-bold text-sm md:text-base uppercase pb-3 pt-4 pl-[125px] pr-8" placeholder="E.G. SIP, TAX..." autocomplete="off">
+        <button class="search-clear absolute right-0 bottom-3 font-mono text-muted hover:text-error font-bold" onclick="clearSearch()" aria-label="Clear Search">✕</button>
+      </div>
+
+    </div>
+
+    <!-- Main Grid Wrapper -->
+    <div class="bg-paper flex flex-col h-full w-full">
+      <!-- Masonry Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[2px] bg-ink border-2 border-ink grid-flow-row-dense" id="calc-grid">
+        
+        <!-- Featured Card: SIP (2x2 Span) -->
+        <a href="sip.html" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px] md:col-span-2 md:row-span-2" data-cat="investing" data-search="sip systematic investment plan mutual fund wealth" data-spans="md:col-span-2 md:row-span-2">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 01 ]</span>
+          </div>
+          <div class="mt-4">
+            <h3 class="font-display font-extrabold text-5xl md:text-6xl uppercase tracking-tighter mb-4">SIP Calc</h3>
+            <p class="font-medium text-sm md:text-lg text-muted group-hover:text-white/90 leading-relaxed max-w-sm">Build wealth through systematic monthly investing. Validated projection engine.</p>
+          </div>
+          <div class="mt-auto pt-10 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute Routine</span>
+            <span class="text-lg group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="investing" data-search="lumpsum one time investment bulk mutual fund">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 02 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">Lumpsum</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Project one-time investment growth over time.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="investing" data-search="step up sip increment annual raise salary increase">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 03 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">Step-Up SIP</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">SIP mechanics with an annual compounding increment.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="investing" data-search="cagr compounded annual growth rate return performance">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 04 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">CAGR</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Calculate the smoothed annualized return of an asset.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="investing" data-search="compound interest compounding growth interest rate principal">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 05 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">Compounder</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Raw compound interest calculation engine.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Large Card (2x1 Span) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px] md:col-span-2" data-cat="investing" data-search="compare sip fd prepay invest versus vs comparison" data-spans="md:col-span-2">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Investing</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 06 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-3">Compare</h3>
+            <p class="font-medium text-sm text-muted group-hover:text-white/90 leading-relaxed">A vs B modeling. SIP vs FD. Prepay vs Invest. See the math play out.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="savings" data-search="fd fixed deposit bank savings interest maturity">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Savings</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 07 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">FD Calc</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Fixed return models with quarterly compounding.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="savings" data-search="rd recurring deposit monthly saving bank post office">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Savings</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 08 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">RD Calc</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Recurring deposit return modeling.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="savings" data-search="ppf public provident fund tax free government 15 year">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Savings</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 09 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">PPF Calc</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">15-year tax-free fund maturity tracking.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Large Card (2x1 Span) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px] md:col-span-2" data-cat="loans" data-search="emi loan home car personal monthly installment interest principal" data-spans="md:col-span-2">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Loans</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 10 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-3">EMI Calc</h3>
+            <p class="font-medium text-sm text-muted group-hover:text-white/90 leading-relaxed">Amortization schedules for standardized loans. Know your exact liabilities.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="loans" data-search="prepayment loan extra payment interest saving part payment">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Loans</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 11 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">Prepayment</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Calculate interest destroyed via principal prepayment.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="tax" data-search="gst goods services tax cgst sgst igst add remove">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Tax</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 12 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">GST Calc</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Isolate or append GST with CGST/SGST breakdown.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Large Card (2x1 Span) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px] md:col-span-2" data-cat="tax" data-search="income tax old new regime itr fy 2025 salary deduction" data-spans="md:col-span-2">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Tax</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 13 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-3">Income Tax</h3>
+            <p class="font-medium text-sm text-muted group-hover:text-white/90 leading-relaxed">Old vs New Regime comparative analysis for FY 25-26. Find optimal setup.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Standard Size (1x1) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px]" data-cat="planning" data-search="retirement corpus retire early financial freedom pension planning">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Planning</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 14 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-2xl md:text-3xl uppercase tracking-tighter mb-2">Retirement</h3>
+            <p class="font-medium text-xs md:text-sm text-muted group-hover:text-white/90 leading-relaxed">Calculate required corpus for financial independence.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Large Card (2x1 Span) -->
+        <a href="#" class="calc-card bg-paper p-6 md:p-8 flex flex-col group hover:bg-cobalt hover:text-white transition-all cursor-pointer min-h-[220px] md:col-span-2" data-cat="planning" data-search="goal planner target dream financial plan sip lumpsum" data-spans="md:col-span-2">
+          <div class="flex justify-between items-start mb-6">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-white/70">Class: Planning</span>
+            <span class="font-mono text-xs font-bold text-cobalt group-hover:text-white transition-colors">[ 15 ]</span>
+          </div>
+          <div>
+            <h3 class="font-display font-extrabold text-3xl md:text-4xl uppercase tracking-tighter mb-3">Goal Planner</h3>
+            <p class="font-medium text-sm text-muted group-hover:text-white/90 leading-relaxed">Reverse-engineer required SIPs against future liabilities and purchases.</p>
+          </div>
+          <div class="mt-auto pt-6 font-mono text-[10px] font-bold uppercase tracking-widest text-cobalt group-hover:text-white transition-colors flex justify-between items-center">
+            <span class="group-hover:tracking-wider transition-all">Execute</span>
+            <span class="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+          </div>
+        </a>
+
+        <!-- Empty State -->
+        <div id="no-results" class="hidden col-span-full bg-paper p-12 text-center flex-col items-center justify-center min-h-[300px]">
+          <div class="font-mono text-xs font-bold tracking-widest uppercase text-muted mb-4">ERR_NOT_FOUND</div>
+          <div class="font-display font-extrabold text-3xl uppercase tracking-tighter mb-2">Null Returns</div>
+          <div class="font-mono text-sm text-muted">Adjust query parameters or filter class.</div>
+        </div>
+
+      </div>
+      
+      <!-- Fills any remaining height with paper, preventing the giant black void -->
+      <div class="flex-grow bg-paper"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 px-2 flex justify-between text-[10px] md:text-xs font-mono font-bold uppercase tracking-widest text-muted">
+      <span>Est. 2026</span>
+      <span>No Ads. No Trackers.</span>
+    </footer>
+
+  </main>
+
+  <script>
+    const searchInput = document.getElementById('search-input');
+    const catBtns = document.querySelectorAll('.cat-btn');
+    const cards = document.querySelectorAll('.calc-card');
+    const noResults = document.getElementById('no-results');
+
+    let activeCategory = 'all';
+    let activeQuery = '';
+
+    // Search Input Logic
+    searchInput.addEventListener('input', (e) => {
+      activeQuery = e.target.value.toLowerCase().trim();
+      runFilter();
+    });
+
+    function clearSearch() {
+      searchInput.value = '';
+      activeQuery = '';
+      searchInput.focus();
+      runFilter();
+    }
+
+    // Category Button Logic
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        activeCategory = btn.getAttribute('data-cat');
+        runFilter();
+      });
+    });
+
+    // Main Filter & Shape Algorithm
+    function runFilter() {
+      let visibleCount = 0;
+      const isDefaultState = (activeCategory === 'all' && activeQuery === '');
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat');
+        const searchStr = card.getAttribute('data-search').toLowerCase() + " " + card.textContent.toLowerCase();
+        
+        const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+        const matchesSearch = activeQuery === '' || searchStr.includes(activeQuery);
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+
+        // Dynamically flatten shapes to 1x1 if filtering, restoring masonry if 'all'
+        const spansAttr = card.getAttribute('data-spans');
+        if (spansAttr) {
+          const spanClasses = spansAttr.split(' ');
+          if (isDefaultState) {
+            card.classList.add(...spanClasses);
+          } else {
+            card.classList.remove(...spanClasses);
+          }
+        }
+      });
+
+      // Handle Empty State
+      if (noResults) {
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+          noResults.classList.add('flex');
+        } else {
+          noResults.classList.add('hidden');
+          noResults.classList.remove('flex');
+        }
+      }
+    }
+    
+    // Auto-focus search on slash key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>
