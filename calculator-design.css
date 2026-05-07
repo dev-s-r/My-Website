@@ -73,9 +73,7 @@
  .cmp-card,
  .stat-card,
  .insight-box,
- .insights-box,
- .winner-box,
- .cmp-card {
+ .insights-box {
   background: var(--bg);
   border: 2px solid var(--border);
   border-radius: 0;
